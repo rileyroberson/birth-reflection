@@ -1,0 +1,48 @@
+/* ── Pastel palette ── */
+:root {
+  --cream:          #fdf6f0;
+  --blush:          #e8b4c5;
+  --blush-light:    #f5dce5;
+  --sage:           #b8d4c8;
+  --sage-light:     #ddeee8;
+  --lavender:       #c5b8d4;
+  --lavender-light: #e4dff0;
+  --text:           #5a4040;
+  --text-muted:     #9a7a7a;
+  --white:          #ffffff;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--text);
+  font-family: 'Georgia', serif;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Georgia', serif;
+  font-weight: normal;
+  letter-spacing: 0.02em;
+}
+
+a {
+  color: var(--blush);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--lavender);
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}

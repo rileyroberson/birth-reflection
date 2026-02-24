@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:\\\\Users\\\\riley\\\\OneDrive\\\\Documents\\\\AI Engineering\\\\Doula Website\" && npm install && npm install react-router-dom gh-pages 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\riley\\\\OneDrive\\\\Documents\\\\AI Engineering\\\\Doula Website\" && npm run build 2>&1)",
+      "Bash(git --version && gh --version && gh auth status 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\riley\\\\OneDrive\\\\Documents\\\\AI Engineering\\\\Doula Website\" && git init && git add . && git commit -m \"Initial commit — Birth Reflection site\" 2>&1)"
+    ]
+  }
+}
