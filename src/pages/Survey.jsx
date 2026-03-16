@@ -9,31 +9,26 @@ const questions = [
     id: 'unexpected',
     label: 'What was something that happened during your birth experience that you didn\'t expect?',
     type: 'textarea',
-    placeholder: 'Take your time...',
   },
   {
     id: 'wish_i_knew',
     label: 'What is something you wish you knew at the very beginning?',
     type: 'textarea',
-    placeholder: 'Big or small, anything counts.',
   },
   {
     id: 'grateful_for',
     label: 'What is something you were grateful for during your birth experience?',
     type: 'textarea',
-    placeholder: 'There is no wrong answer here.',
   },
   {
     id: 'never_forget',
     label: 'What is something you never want to forget about your experience?',
     type: 'textarea',
-    placeholder: 'This is your space.',
   },
   {
     id: 'for_the_child',
     label: 'What is something you want the child you delivered to know about their birth?',
     type: 'textarea',
-    placeholder: 'In your own words...',
   },
 ]
 
@@ -91,7 +86,7 @@ export default function Survey() {
               id={q.id}
               name={q.id}
               className={styles.textarea}
-              placeholder={q.placeholder}
+
               rows={4}
               value={formData[q.id] ?? ''}
               onChange={e => handleChange(q.id, e.target.value)}

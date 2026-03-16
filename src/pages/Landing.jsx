@@ -11,7 +11,7 @@ export default function Landing() {
       </div>
 
       <main className={styles.content}>
-        <p className={styles.eyebrow}>a gentle space to reflect</p>
+        <p className={styles.eyebrow}>a space to reflect</p>
         <h1 className={styles.title}>Birth Reflection</h1>
         <p className={styles.subtitle}>
           Your birth story matters. This short survey is an invitation to pause,
@@ -20,6 +20,9 @@ export default function Landing() {
         </p>
         <Link to="/survey" className={styles.button}>
           Begin the survey
+        </Link>
+        <Link to="/timeline" className={styles.secondaryLink}>
+          or create a birth timeline →
         </Link>
       </main>
 

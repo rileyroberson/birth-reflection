@@ -1,0 +1,230 @@
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.backLink {
+  display: inline-block;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: var(--blush);
+}
+
+.title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Meta fields — baby name + birth date */
+.metaRow {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.metaField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.metaLabel {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.metaInput {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--blush-light);
+  border-radius: 10px;
+  background-color: var(--white);
+  color: var(--text);
+  font-family: 'Georgia', serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.metaInput:focus {
+  border-color: var(--lavender);
+}
+
+/* Column labels */
+.columnLabels {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 0 0.4rem;
+  margin-bottom: 0.25rem;
+}
+
+.timeLabel {
+  flex-shrink: 0;
+  width: 9rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.descLabel {
+  flex: 1;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Event rows */
+.events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.eventRow {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.timeInput {
+  flex-shrink: 0;
+  width: 9rem;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--blush-light);
+  border-radius: 10px;
+  background-color: var(--white);
+  color: var(--text);
+  font-family: 'Georgia', serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.timeInput:focus {
+  border-color: var(--lavender);
+}
+
+.descInput {
+  flex: 1;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--blush-light);
+  border-radius: 10px;
+  background-color: var(--white);
+  color: var(--text);
+  font-family: 'Georgia', serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.descInput::placeholder {
+  color: #c8aaaa;
+}
+
+.descInput:focus {
+  border-color: var(--lavender);
+}
+
+.removeBtn {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1.5px solid var(--blush-light);
+  border-radius: 50%;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: border-color 0.2s, color 0.2s;
+  padding: 0;
+}
+
+.removeBtn:hover {
+  border-color: var(--blush);
+  color: var(--blush);
+}
+
+/* Bottom actions */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.addBtn {
+  background: none;
+  border: 1.5px solid var(--sage);
+  border-radius: 50px;
+  padding: 0.6rem 1.4rem;
+  color: #6a9a88;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.addBtn:hover {
+  background-color: var(--sage-light);
+}
+
+.generateBtn {
+  background-color: var(--blush);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  padding: 0.9rem 2.5rem;
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.generateBtn:hover {
+  background-color: var(--lavender);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 520px) {
+  .metaRow {
+    flex-direction: column;
+  }
+
+  .timeInput {
+    width: 7.5rem;
+  }
+
+  .columnLabels {
+    display: none;
+  }
+}
