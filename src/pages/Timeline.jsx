@@ -143,9 +143,9 @@ function buildPrintHTML(events, babyName, birthDate) {
         const color = colors[i % colors.length]
         const badgeLeft = i % 2 === 0  // even: badge on left, content on right
 
-        const badge = `<div style="display:inline-block;background:${color};color:#fff;border-radius:50px;padding:0.45rem 1.2rem;font-size:0.85rem;font-family:Georgia,serif;letter-spacing:0.03em;white-space:nowrap;">${fmt12(e.time) || '—'}</div>`
+        const badge = `<div style="display:inline-block;background:${color};color:#fff;border-radius:50px;padding:0.45rem 1.2rem;font-size:0.85rem;font-family:'Nunito',sans-serif;letter-spacing:0.03em;white-space:nowrap;">${fmt12(e.time) || '—'}</div>`
 
-        const content = `<p style="color:#5a4040;font-size:0.95rem;line-height:1.65;margin:0;font-family:Georgia,serif;">${e.description}</p>`
+        const content = `<p style="color:#5a4040;font-size:0.95rem;line-height:1.65;margin:0;font-family:'Nunito',sans-serif;">${e.description}</p>`
 
         return `
           <div style="display:flex;align-items:center;min-height:100px;">
@@ -164,12 +164,14 @@ function buildPrintHTML(events, babyName, birthDate) {
 <head>
   <meta charset="UTF-8">
   <title>${titleLine}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       background: #fdf6f0;
       color: #5a4040;
-      font-family: Georgia, serif;
+      font-family: 'Nunito', sans-serif;
       line-height: 1.7;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
@@ -233,7 +235,7 @@ function buildPrintHTML(events, babyName, birthDate) {
   <div class="page">
     <div style="text-align:center;margin-bottom:3.5rem;padding-bottom:2.5rem;border-bottom:1.5px solid #f0dce8;position:relative;z-index:1;">
       <p style="color:#c5b8d4;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:1rem;">a record of arrival</p>
-      <h1 style="font-weight:normal;font-size:2.2rem;color:#5a4040;letter-spacing:0.02em;margin-bottom:0.5rem;">${titleLine}</h1>
+      <h1 style="font-weight:300;font-size:2.2rem;color:#5a4040;letter-spacing:0.04em;margin-bottom:0.5rem;">${titleLine}</h1>
       ${dateStr ? `<p style="color:#9a7a7a;font-size:0.9rem;">${dateStr}</p>` : ''}
     </div>
     <div class="timeline" style="position:relative;z-index:1;">
