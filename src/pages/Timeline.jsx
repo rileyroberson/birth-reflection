@@ -171,11 +171,41 @@ function buildPrintHTML(events, babyName, birthDate) {
       color: #5a4040;
       font-family: Georgia, serif;
       line-height: 1.7;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     .page {
       max-width: 620px;
       margin: 0 auto;
       padding: 4rem 2rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Decorative pastel circles — mirrors the homepage */
+    .petal {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .petal-1 {
+      width: 420px; height: 420px;
+      background: #e8b4c5;
+      opacity: 0.18;
+      top: -120px; right: -100px;
+    }
+    .petal-2 {
+      width: 320px; height: 320px;
+      background: #b8d4c8;
+      opacity: 0.18;
+      bottom: -80px; left: -80px;
+    }
+    .petal-3 {
+      width: 220px; height: 220px;
+      background: #c5b8d4;
+      opacity: 0.15;
+      top: 45%; left: 5%;
     }
     .timeline {
       position: relative;
@@ -192,20 +222,21 @@ function buildPrintHTML(events, babyName, birthDate) {
       z-index: 0;
     }
     @media print {
-      html, body { background: #fff; }
       .page { padding: 2rem 1.5rem 3rem; }
-      .timeline::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
 <body>
+  <div class="petal petal-1"></div>
+  <div class="petal petal-2"></div>
+  <div class="petal petal-3"></div>
   <div class="page">
-    <div style="text-align:center;margin-bottom:3.5rem;padding-bottom:2.5rem;border-bottom:1.5px solid #f0dce8;">
+    <div style="text-align:center;margin-bottom:3.5rem;padding-bottom:2.5rem;border-bottom:1.5px solid #f0dce8;position:relative;z-index:1;">
       <p style="color:#c5b8d4;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:1rem;">a record of arrival</p>
       <h1 style="font-weight:normal;font-size:2.2rem;color:#5a4040;letter-spacing:0.02em;margin-bottom:0.5rem;">${titleLine}</h1>
       ${dateStr ? `<p style="color:#9a7a7a;font-size:0.9rem;">${dateStr}</p>` : ''}
     </div>
-    <div class="timeline">
+    <div class="timeline" style="position:relative;z-index:1;">
       ${eventsHTML}
     </div>
   </div>
