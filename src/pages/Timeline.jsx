@@ -134,24 +134,30 @@ function buildPrintHTML(events, babyName, birthDate) {
       })
     : ''
 
+  // Cycle through the site's three pastel accent colors
+  const colors = ['#e8b4c5', '#b8d4c8', '#c5b8d4']
+
   const eventsHTML = events.length === 0
     ? `<p style="color:#9a7a7a;font-style:italic;text-align:center;padding:2rem 0;">No moments recorded yet.</p>`
-    : events.map((e, i) => `
-        <div style="display:flex;gap:1.5rem;align-items:flex-start;">
-          <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:0.3rem;">
-            <div style="width:13px;height:13px;border-radius:50%;background:#e8b4c5;box-shadow:0 0 0 3px #fdf6f0,0 0 0 4px #f5dce5;flex-shrink:0;"></div>
-            ${i < events.length - 1
-              ? `<div style="width:1.5px;flex:1;min-height:2.75rem;background:linear-gradient(to bottom,#f0d4e0,#e4dff0);margin-top:4px;"></div>`
-              : ''}
-          </div>
-          <div style="padding-bottom:2rem;flex:1;min-width:0;">
-            ${e.time
-              ? `<div style="font-size:0.72rem;color:#c5b8d4;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.3rem;font-family:Georgia,serif;">${fmt12(e.time)}</div>`
-              : ''}
-            <p style="color:#5a4040;font-size:1rem;line-height:1.65;margin:0;font-family:Georgia,serif;">${e.description}</p>
-          </div>
-        </div>`
-    ).join('')
+    : events.map((e, i) => {
+        const color = colors[i % colors.length]
+        const badgeLeft = i % 2 === 0  // even: badge on left, content on right
+
+        const badge = `<div style="display:inline-block;background:${color};color:#fff;border-radius:50px;padding:0.45rem 1.2rem;font-size:0.85rem;font-family:Georgia,serif;letter-spacing:0.03em;white-space:nowrap;">${fmt12(e.time) || '—'}</div>`
+
+        const content = `<p style="color:#5a4040;font-size:0.95rem;line-height:1.65;margin:0;font-family:Georgia,serif;">${e.description}</p>`
+
+        return `
+          <div style="display:flex;align-items:center;min-height:100px;">
+            <div style="flex:1;text-align:right;padding-right:1.75rem;">
+              ${badgeLeft ? badge : content}
+            </div>
+            <div style="flex-shrink:0;width:15px;height:15px;border-radius:50%;background:${color};border:3px solid #fdf6f0;position:relative;z-index:1;"></div>
+            <div style="flex:1;text-align:left;padding-left:1.75rem;">
+              ${badgeLeft ? content : badge}
+            </div>
+          </div>`
+      }).join('')
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -167,24 +173,41 @@ function buildPrintHTML(events, babyName, birthDate) {
       line-height: 1.7;
     }
     .page {
-      max-width: 600px;
+      max-width: 620px;
       margin: 0 auto;
-      padding: 4rem 2.5rem 5rem;
+      padding: 4rem 2rem 5rem;
+    }
+    .timeline {
+      position: relative;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #f5dce5, #e4dff0, #f5dce5);
+      transform: translateX(-50%);
+      z-index: 0;
     }
     @media print {
       html, body { background: #fff; }
-      .page { padding: 2.5rem 1.5rem 3rem; }
+      .page { padding: 2rem 1.5rem 3rem; }
+      .timeline::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div style="text-align:center;margin-bottom:3.5rem;padding-bottom:2.5rem;border-bottom:1px solid #f0dce8;">
-      <p style="color:#c5b8d4;font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;">a record of arrival</p>
-      <h1 style="font-weight:normal;font-size:2.1rem;color:#5a4040;letter-spacing:0.02em;margin-bottom:0.6rem;">${titleLine}</h1>
-      ${dateStr ? `<p style="color:#9a7a7a;font-size:0.95rem;">${dateStr}</p>` : ''}
+    <div style="text-align:center;margin-bottom:3.5rem;padding-bottom:2.5rem;border-bottom:1.5px solid #f0dce8;">
+      <p style="color:#c5b8d4;font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:1rem;">a record of arrival</p>
+      <h1 style="font-weight:normal;font-size:2.2rem;color:#5a4040;letter-spacing:0.02em;margin-bottom:0.5rem;">${titleLine}</h1>
+      ${dateStr ? `<p style="color:#9a7a7a;font-size:0.9rem;">${dateStr}</p>` : ''}
     </div>
-    <div>${eventsHTML}</div>
+    <div class="timeline">
+      ${eventsHTML}
+    </div>
   </div>
 </body>
 </html>`
