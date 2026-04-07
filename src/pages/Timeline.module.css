@@ -195,6 +195,39 @@
   color: var(--blush);
 }
 
+/* Theme selector */
+.themeRow {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.themeBtn {
+  padding: 0.5rem 1.4rem;
+  border-radius: 50px;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.18s;
+  border: 2px solid transparent;
+  opacity: 0.65;
+}
+
+.themeBtn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.themeBtnActive {
+  opacity: 1;
+  border-color: rgba(0,0,0,0.15);
+  transform: none;
+}
+
+.theme_girl   { background: #f5c8d0; color: #5a3040; }
+.theme_boy    { background: #c5d8f5; color: #1a3050; }
+.theme_neutral { background: #ede8f8; color: #3a3050; }
+
 /* Bottom actions */
 .actions {
   display: flex;

@@ -7,6 +7,99 @@ function makeEvent() {
   return { id: _id++, time: '', description: '' }
 }
 
+// ─────────────────────────────────────────────
+// Theme definitions
+// ─────────────────────────────────────────────
+
+const THEMES = {
+  girl: {
+    label: 'Girl',
+    hdrBg:       '#f5c8d0',
+    labelBg:     '#556640',
+    labelValBg:  '#eaf0e2',
+    rowA:        '#fde8ec',
+    rowB:        '#e8f0e6',
+    tcColor:     '#556640',
+    btnBg:       '#e8b4c5',
+    btnHover:    '#d8a0b5',
+    btnColor:    '#5a3040',
+    editDash:    '#d4a0b4',
+    editSolid:   '#c88aa4',
+    editHoverBg: 'rgba(232,180,197,0.10)',
+    editFocusBg: 'rgba(232,180,197,0.18)',
+    // SVG flower colors per cluster
+    flowers: {
+      left:        ['#b0bad8','#c0cae5','#a8b5d5','#b8c4e0'],
+      leaves:      ['#8a9a6a','#9aaa7a'],
+      centerLeft:  ['#d8a8c0','#e0b8d0','#c898b8'],
+      center:      ['#f0c070','#e8b058','#f5d080','#f8dc90'],
+      centerLeaves:['#8a9a6a','#9aaa7a'],
+      centerRight: ['#a0c8e0','#90b5d5','#b0d0e5'],
+      right:       ['#d8a0b8','#c890a8','#e0b0c8'],
+      farRight:    ['#80b8b5','#70a8a5','#88c0bc','#78b0ae'],
+      rightLeaves: ['#8a9a6a','#9aaa7a'],
+    },
+  },
+  boy: {
+    label: 'Boy',
+    hdrBg:       '#c5d8f5',
+    labelBg:     '#3a5e7a',
+    labelValBg:  '#ddeef8',
+    rowA:        '#d8eaf8',
+    rowB:        '#dff0ea',
+    tcColor:     '#3a5e7a',
+    btnBg:       '#8ab4d8',
+    btnHover:    '#7aa4c8',
+    btnColor:    '#1a3050',
+    editDash:    '#7aa4cc',
+    editSolid:   '#5a90c0',
+    editHoverBg: 'rgba(138,180,216,0.10)',
+    editFocusBg: 'rgba(138,180,216,0.18)',
+    flowers: {
+      left:        ['#a8c8e8','#b8d8f5','#90b8e0','#a0c0e5'],
+      leaves:      ['#6a9a78','#7aaa88'],
+      centerLeft:  ['#78b8d8','#90c8e8','#68a8cc'],
+      center:      ['#a0d0c8','#88c0b8','#b0d8d0','#c0e0d8'],
+      centerLeaves:['#6a9a78','#7aaa88'],
+      centerRight: ['#b0d0f0','#a0c0e8','#c0d8f8'],
+      right:       ['#5888b8','#4878a8','#6898c8'],
+      farRight:    ['#90b8d8','#80a8c8','#a0c8e0','#88b0d0'],
+      rightLeaves: ['#6a9a78','#7aaa88'],
+    },
+  },
+  neutral: {
+    label: 'Neutral',
+    hdrBg:       '#ede8f8',
+    labelBg:     '#7a6888',
+    labelValBg:  '#f0eaf8',
+    rowA:        '#f0eaf8',
+    rowB:        '#e8f0ea',
+    tcColor:     '#7a6888',
+    btnBg:       '#c5b8d4',
+    btnHover:    '#b5a8c4',
+    btnColor:    '#3a3050',
+    editDash:    '#b8a8cc',
+    editSolid:   '#a898bc',
+    editHoverBg: 'rgba(197,184,212,0.10)',
+    editFocusBg: 'rgba(197,184,212,0.18)',
+    flowers: {
+      left:        ['#c0b0d8','#d0c0e8','#b0a0d0','#c8b8e0'],
+      leaves:      ['#8a9a6a','#9aaa7a'],
+      centerLeft:  ['#d8c0b8','#e8d0c0','#c8b0a8'],
+      center:      ['#c8d8a8','#b8c898','#d8e0b8','#e0e8c8'],
+      centerLeaves:['#8a9a6a','#9aaa7a'],
+      centerRight: ['#d0c0e0','#c0b0d8','#e0d0f0'],
+      right:       ['#c8b0c8','#b8a0b8','#d8c0d0'],
+      farRight:    ['#b0c8b8','#a0b8a8','#b8d0c0','#a8c0b0'],
+      rightLeaves: ['#8a9a6a','#9aaa7a'],
+    },
+  },
+}
+
+// ─────────────────────────────────────────────
+// Component
+// ─────────────────────────────────────────────
+
 export default function Timeline() {
   const [babyName, setBabyName]     = useState('')
   const [parents, setParents]       = useState('')
@@ -16,6 +109,7 @@ export default function Timeline() {
   const [height, setHeight]         = useState('')
   const [birthplace, setBirthplace] = useState('')
   const [provider, setProvider]     = useState('')
+  const [theme, setTheme]           = useState('girl')
   const [events, setEvents]         = useState([makeEvent(), makeEvent(), makeEvent()])
 
   function addEvent() {
@@ -41,7 +135,7 @@ export default function Timeline() {
       return
     }
     win.document.write(buildPrintHTML(filled, {
-      babyName, parents, birthDate, birthTime, weight, height, birthplace, provider,
+      babyName, parents, birthDate, birthTime, weight, height, birthplace, provider, theme,
     }))
     win.document.close()
     win.focus()
@@ -133,6 +227,23 @@ export default function Timeline() {
         </div>
       </section>
 
+      {/* ── Theme ── */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Color Theme</h2>
+        <div className={styles.themeRow}>
+          {Object.entries(THEMES).map(([key, t]) => (
+            <button
+              key={key}
+              type="button"
+              className={`${styles.themeBtn} ${theme === key ? styles.themeBtnActive : ''} ${styles[`theme_${key}`]}`}
+              onClick={() => setTheme(key)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* ── Timeline Events ── */}
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Timeline Events</h2>
@@ -209,16 +320,53 @@ function fmtDate(dateStr) {
 }
 
 // ─────────────────────────────────────────────
+// SVG flowers (theme-aware)
+// ─────────────────────────────────────────────
+
+function buildSVG(f) {
+  return `<svg viewBox="0 0 740 90" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="5"  cy="24" r="30" fill="${f.left[0]}"        opacity="0.83"/>
+    <circle cx="32" cy="8"  r="22" fill="${f.left[1]}"        opacity="0.73"/>
+    <circle cx="56" cy="30" r="18" fill="${f.left[2]}"        opacity="0.66"/>
+    <circle cx="20" cy="48" r="13" fill="${f.left[3]}"        opacity="0.58"/>
+    <ellipse cx="78"  cy="54" rx="34" ry="11" fill="${f.leaves[0]}"       opacity="0.72" transform="rotate(-28 78 54)"/>
+    <ellipse cx="44"  cy="68" rx="24" ry="8"  fill="${f.leaves[1]}"       opacity="0.62" transform="rotate(16 44 68)"/>
+    <circle cx="165" cy="20" r="14" fill="${f.centerLeft[0]}" opacity="0.70"/>
+    <circle cx="193" cy="7"  r="10" fill="${f.centerLeft[1]}" opacity="0.60"/>
+    <circle cx="150" cy="36" r="9"  fill="${f.centerLeft[2]}" opacity="0.56"/>
+    <circle cx="355" cy="22" r="28" fill="${f.center[0]}"     opacity="0.78"/>
+    <circle cx="375" cy="5"  r="17" fill="${f.center[1]}"     opacity="0.60"/>
+    <circle cx="328" cy="12" r="15" fill="${f.center[2]}"     opacity="0.56"/>
+    <circle cx="370" cy="44" r="11" fill="${f.center[3]}"     opacity="0.48"/>
+    <ellipse cx="308" cy="56" rx="26" ry="9"  fill="${f.centerLeaves[0]}" opacity="0.65" transform="rotate(-24 308 56)"/>
+    <ellipse cx="390" cy="58" rx="20" ry="7"  fill="${f.centerLeaves[1]}" opacity="0.58" transform="rotate(18 390 58)"/>
+    <circle cx="495" cy="16" r="13" fill="${f.centerRight[0]}" opacity="0.70"/>
+    <circle cx="522" cy="28" r="10" fill="${f.centerRight[1]}" opacity="0.60"/>
+    <circle cx="478" cy="32" r="8"  fill="${f.centerRight[2]}" opacity="0.54"/>
+    <circle cx="582" cy="22" r="23" fill="${f.right[0]}"      opacity="0.77"/>
+    <circle cx="610" cy="8"  r="16" fill="${f.right[1]}"      opacity="0.67"/>
+    <circle cx="560" cy="38" r="12" fill="${f.right[2]}"      opacity="0.57"/>
+    <circle cx="660" cy="24" r="22" fill="${f.farRight[0]}"   opacity="0.73"/>
+    <circle cx="684" cy="42" r="16" fill="${f.farRight[1]}"   opacity="0.63"/>
+    <circle cx="714" cy="18" r="20" fill="${f.farRight[2]}"   opacity="0.68"/>
+    <circle cx="736" cy="38" r="13" fill="${f.farRight[3]}"   opacity="0.58"/>
+    <ellipse cx="668" cy="60" rx="30" ry="10" fill="${f.rightLeaves[0]}"  opacity="0.65" transform="rotate(24 668 60)"/>
+    <ellipse cx="720" cy="58" rx="20" ry="7"  fill="${f.rightLeaves[1]}"  opacity="0.60" transform="rotate(-14 720 58)"/>
+  </svg>`
+}
+
+// ─────────────────────────────────────────────
 // PDF HTML builder
 // ─────────────────────────────────────────────
 
-function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weight, height, birthplace, provider }) {
-  const titleLine      = babyName ? `${babyName}'s Birth Timeline` : 'Birth Timeline'
-  const dateStr        = fmtDate(birthDate)
-  const timeStr        = fmt12(birthTime)
-  const dateTimeStr    = [dateStr, timeStr].filter(Boolean).join('  |  ')
-  const weightHtStr    = [weight, height].filter(Boolean).join('  |  ')
-  const placeProvStr   = [birthplace, provider].filter(Boolean).join('  |  ')
+function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weight, height, birthplace, provider, theme }) {
+  const t            = THEMES[theme] ?? THEMES.girl
+  const titleLine    = babyName ? `${babyName}'s Birth Timeline` : 'Birth Timeline'
+  const dateStr      = fmtDate(birthDate)
+  const timeStr      = fmt12(birthTime)
+  const dateTimeStr  = [dateStr, timeStr].filter(Boolean).join('  |  ')
+  const weightHtStr  = [weight, height].filter(Boolean).join('  |  ')
+  const placeProvStr = [birthplace, provider].filter(Boolean).join('  |  ')
 
   // Split events into two columns to fit on one page
   const half  = Math.ceil(events.length / 2)
@@ -249,6 +397,8 @@ function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weigh
 <head>
   <meta charset="UTF-8">
   <title>${esc(titleLine)}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@400;600&family=Libre+Baskerville:wght@400;700&family=EB+Garamond:wght@400;700&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     @page { size: letter portrait; margin: 0.3in 0.4in; }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -260,41 +410,57 @@ function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weigh
       print-color-adjust: exact;
     }
 
-    /* ── Toolbar (hidden when printing) ── */
+    /* ── Toolbar ── */
     .toolbar {
       position: fixed;
       top: 0; left: 0; right: 0;
       background: #fff;
       border-bottom: 1px solid #e8d5d8;
-      padding: 9px 18px;
+      padding: 8px 16px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       z-index: 999;
       box-shadow: 0 2px 10px rgba(0,0,0,0.07);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .toolbar-hint {
       flex: 1;
-      font-size: 12.5px;
+      font-size: 12px;
       color: #9a7a7a;
     }
     .toolbar-hint strong { color: #6a5555; }
+    .toolbar-label {
+      font-size: 12px;
+      color: #6a5555;
+      font-weight: 600;
+    }
+    .font-picker {
+      font-size: 13px;
+      padding: 4px 8px;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      background: #fafafa;
+      color: #3a3530;
+      cursor: pointer;
+      outline: none;
+    }
+    .font-picker:focus { border-color: ${t.editSolid}; }
     .btn-save {
-      background: #e8b4c5;
-      color: #5a3040;
+      background: ${t.btnBg};
+      color: ${t.btnColor};
       border: none;
       border-radius: 50px;
       padding: 7px 20px;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       letter-spacing: 0.03em;
       transition: background 0.18s;
     }
-    .btn-save:hover { background: #d8a0b5; }
+    .btn-save:hover { background: ${t.btnHover}; }
 
-    /* ── Editable text styles ── */
+    /* ── Editable ── */
     [contenteditable] {
       outline: none;
       border-radius: 3px;
@@ -302,22 +468,24 @@ function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weigh
       display: inline-block;
     }
     [contenteditable]:hover {
-      outline: 1.5px dashed #d4a0b4;
-      background: rgba(232,180,197,0.10);
+      outline: 1.5px dashed ${t.editDash};
+      background: ${t.editHoverBg};
     }
     [contenteditable]:focus {
-      outline: 1.5px solid #c88aa4;
-      background: rgba(232,180,197,0.18);
+      outline: 1.5px solid ${t.editSolid};
+      background: ${t.editFocusBg};
     }
 
     .wrap { margin-top: 48px; }
 
-    /* ── Floral header ── */
+    /* ── Header ── */
     .hdr {
-      background: #f5c8d0;
+      background: ${t.hdrBg};
       padding: 0 0 12pt;
       text-align: center;
       overflow: hidden;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     .hdr svg { width: 100%; display: block; }
     .hdr-parents {
@@ -339,39 +507,47 @@ function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weigh
     /* ── Info table ── */
     .info { width: 100%; border-collapse: collapse; }
     .info .lbl {
-      background: #556640;
+      background: ${t.labelBg};
       color: #fff;
       padding: 4pt 8pt;
       font-size: 7.5pt;
       width: 26%;
       vertical-align: middle;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     .info .val {
-      background: #eaf0e2;
+      background: ${t.labelValBg};
       padding: 4pt 8pt;
       font-size: 7.5pt;
       color: #3a3530;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
     /* ── Timeline table ── */
     .tl { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 2pt; }
     .tl thead th {
-      background: #556640;
+      background: ${t.labelBg};
       color: #fff;
       padding: 4.5pt 7pt;
       font-size: 8pt;
       font-weight: normal;
       text-align: left;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
     .tl td {
       padding: 4pt 5pt;
       font-size: 7.5pt;
       vertical-align: top;
       line-height: 1.4;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
-    .rp td { background: #fde8ec; }
-    .rs td { background: #e8f0e6; }
-    .tc { color: #556640; font-weight: bold; width: 12%; }
+    .rp td { background: ${t.rowA}; }
+    .rs td { background: ${t.rowB}; }
+    .tc { color: ${t.tcColor}; font-weight: bold; width: 12%; }
     .ec { width: 38%; }
 
     @media print {
@@ -383,60 +559,28 @@ function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weigh
 <body>
 
 <div class="toolbar">
-  <span class="toolbar-hint"><strong>Click any text to edit it.</strong> Make changes, then save when ready.</span>
+  <span class="toolbar-hint"><strong>Click any text to edit.</strong> Change font below, then save.</span>
+  <span class="toolbar-label">Font:</span>
+  <select class="font-picker" id="fontPicker" onchange="applyFont(this.value)">
+    <option value="Georgia, serif">Georgia</option>
+    <option value="'Playfair Display', serif">Playfair Display</option>
+    <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+    <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+    <option value="'EB Garamond', serif">EB Garamond</option>
+    <option value="'Nunito', sans-serif">Nunito</option>
+  </select>
   <button class="btn-save" onclick="window.print()">Save as PDF</button>
 </div>
 
 <div class="wrap">
-
-  <!-- Floral header -->
   <div class="hdr">
-    <svg viewBox="0 0 740 90" xmlns="http://www.w3.org/2000/svg">
-      <!-- Left hydrangea cluster -->
-      <circle cx="5"  cy="24" r="30" fill="#b0bad8" opacity="0.83"/>
-      <circle cx="32" cy="8"  r="22" fill="#c0cae5" opacity="0.73"/>
-      <circle cx="56" cy="30" r="18" fill="#a8b5d5" opacity="0.66"/>
-      <circle cx="20" cy="48" r="13" fill="#b8c4e0" opacity="0.58"/>
-      <!-- Left leaves -->
-      <ellipse cx="78"  cy="54" rx="34" ry="11" fill="#8a9a6a" opacity="0.72" transform="rotate(-28 78 54)"/>
-      <ellipse cx="44"  cy="68" rx="24" ry="8"  fill="#9aaa7a" opacity="0.62" transform="rotate(16 44 68)"/>
-      <!-- Center-left pink flowers -->
-      <circle cx="165" cy="20" r="14" fill="#d8a8c0" opacity="0.70"/>
-      <circle cx="193" cy="7"  r="10" fill="#e0b8d0" opacity="0.60"/>
-      <circle cx="150" cy="36" r="9"  fill="#c898b8" opacity="0.56"/>
-      <!-- Center yellow rose -->
-      <circle cx="355" cy="22" r="28" fill="#f0c070" opacity="0.78"/>
-      <circle cx="375" cy="5"  r="17" fill="#e8b058" opacity="0.60"/>
-      <circle cx="328" cy="12" r="15" fill="#f5d080" opacity="0.56"/>
-      <circle cx="370" cy="44" r="11" fill="#f8dc90" opacity="0.48"/>
-      <!-- Center leaves -->
-      <ellipse cx="308" cy="56" rx="26" ry="9"  fill="#8a9a6a" opacity="0.65" transform="rotate(-24 308 56)"/>
-      <ellipse cx="390" cy="58" rx="20" ry="7"  fill="#9aaa7a" opacity="0.58" transform="rotate(18 390 58)"/>
-      <!-- Center-right blue accent -->
-      <circle cx="495" cy="16" r="13" fill="#a0c8e0" opacity="0.70"/>
-      <circle cx="522" cy="28" r="10" fill="#90b5d5" opacity="0.60"/>
-      <circle cx="478" cy="32" r="8"  fill="#b0d0e5" opacity="0.54"/>
-      <!-- Right mauve flowers -->
-      <circle cx="582" cy="22" r="23" fill="#d8a0b8" opacity="0.77"/>
-      <circle cx="610" cy="8"  r="16" fill="#c890a8" opacity="0.67"/>
-      <circle cx="560" cy="38" r="12" fill="#e0b0c8" opacity="0.57"/>
-      <!-- Far right teal cluster -->
-      <circle cx="660" cy="24" r="22" fill="#80b8b5" opacity="0.73"/>
-      <circle cx="684" cy="42" r="16" fill="#70a8a5" opacity="0.63"/>
-      <circle cx="714" cy="18" r="20" fill="#88c0bc" opacity="0.68"/>
-      <circle cx="736" cy="38" r="13" fill="#78b0ae" opacity="0.58"/>
-      <!-- Right leaves -->
-      <ellipse cx="668" cy="60" rx="30" ry="10" fill="#8a9a6a" opacity="0.65" transform="rotate(24 668 60)"/>
-      <ellipse cx="720" cy="58" rx="20" ry="7"  fill="#9aaa7a" opacity="0.60" transform="rotate(-14 720 58)"/>
-    </svg>
+    ${buildSVG(t.flowers)}
     <p class="hdr-parents"><span contenteditable="true">${esc(parents) || 'Family'}</span></p>
     <h1 class="hdr-title"><span contenteditable="true">${esc(titleLine.toUpperCase())}</span></h1>
   </div>
 
-  <!-- Birth info table -->
   ${infoRowsHTML ? `<table class="info">${infoRowsHTML}</table>` : ''}
 
-  <!-- Timeline table -->
   <table class="tl">
     <thead>
       <tr>
@@ -450,8 +594,13 @@ function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weigh
       ${rowsHTML || '<tr class="rs"><td colspan="4" style="text-align:center;padding:8pt;color:#888;font-style:italic;">No events recorded yet.</td></tr>'}
     </tbody>
   </table>
-
 </div>
+
+<script>
+  function applyFont(family) {
+    document.body.style.fontFamily = family;
+  }
+</script>
 </body>
 </html>`
 }
