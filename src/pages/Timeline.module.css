@@ -35,7 +35,29 @@
   margin: 0 auto;
 }
 
-/* Meta fields — baby name + birth date */
+/* Section grouping */
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--blush-light);
+}
+
+/* Meta grid — 2-column layout */
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem 1.25rem;
+}
+
+/* Legacy single-row meta (kept for backwards compat) */
 .metaRow {
   display: flex;
   gap: 1.25rem;
@@ -216,7 +238,9 @@
 }
 
 @media (max-width: 520px) {
-  .metaRow {
+  .metaRow,
+  .metaGrid {
+    grid-template-columns: 1fr;
     flex-direction: column;
   }
 
