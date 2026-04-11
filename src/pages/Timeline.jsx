@@ -111,6 +111,8 @@ export default function Timeline() {
   const [provider, setProvider]     = useState('')
   const [theme, setTheme]           = useState('girl')
   const [events, setEvents]         = useState([makeEvent(), makeEvent(), makeEvent()])
+  const [sameDay, setSameDay]       = useState(true)
+  const [sharedDate, setSharedDate] = useState('')
 
   function addEvent() {
     setEvents(prev => [...prev, makeEvent()])
@@ -126,6 +128,7 @@ export default function Timeline() {
 
   function handlePreviewPDF() {
     const filled = events
+      .map(e => sameDay ? { ...e, date: sharedDate } : e)
       .filter(e => e.date || e.time || e.description.trim())
       .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
 
@@ -246,21 +249,45 @@ export default function Timeline() {
 
       {/* ── Timeline Events ── */}
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Timeline Events</h2>
+        <div className={styles.sectionTitleRow}>
+          <h2 className={styles.sectionTitle}>Timeline Events</h2>
+          <label className={styles.sameDayLabel}>
+            <input
+              type="checkbox"
+              className={styles.sameDayCheck}
+              checked={sameDay}
+              onChange={e => setSameDay(e.target.checked)}
+            />
+            Same day
+          </label>
+        </div>
+        {sameDay && (
+          <div className={styles.sharedDateRow}>
+            <span className={styles.sharedDateText}>Date for all events:</span>
+            <input
+              type="date"
+              className={styles.dateInput}
+              value={sharedDate}
+              onChange={e => setSharedDate(e.target.value)}
+            />
+          </div>
+        )}
         <div className={styles.columnLabels}>
-          <span className={styles.dateLabel}>Date</span>
+          {!sameDay && <span className={styles.dateLabel}>Date</span>}
           <span className={styles.timeLabel}>Time</span>
           <span className={styles.descLabel}>Moment</span>
         </div>
         <div className={styles.events}>
           {events.map(event => (
             <div key={event.id} className={styles.eventRow}>
-              <input
-                type="date"
-                className={styles.dateInput}
-                value={event.date}
-                onChange={e => updateEvent(event.id, 'date', e.target.value)}
-              />
+              {!sameDay && (
+                <input
+                  type="date"
+                  className={styles.dateInput}
+                  value={event.date}
+                  onChange={e => updateEvent(event.id, 'date', e.target.value)}
+                />
+              )}
               <input
                 type="time"
                 className={styles.timeInput}
