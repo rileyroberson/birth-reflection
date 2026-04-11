@@ -95,50 +95,66 @@
   border-color: var(--lavender);
 }
 
-/* Section title row with same-day checkbox */
-.sectionTitleRow {
+/* Day groups */
+.dayGroup {
+  border: 1.5px solid var(--blush-light);
+  border-radius: 14px;
+  padding: 1rem 1.1rem 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.dayHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.9rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--blush-light);
+  margin-bottom: 0.75rem;
 }
 
-.sectionTitleRow .sectionTitle {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
-.sameDayLabel {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  user-select: none;
-}
-
-.sameDayCheck {
-  accent-color: var(--blush);
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
-}
-
-.sharedDateRow {
+.dayHeaderLeft {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0.9rem;
 }
 
-.sharedDateText {
-  font-size: 0.82rem;
+.dayLabel {
+  font-size: 0.78rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+.removeDayBtn {
+  background: none;
+  border: 1.5px solid var(--blush-light);
+  border-radius: 50px;
+  padding: 0.3rem 0.9rem;
+  font-family: 'Georgia', serif;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.removeDayBtn:hover {
+  border-color: var(--blush);
+  color: var(--blush);
+}
+
+.addMomentBtn {
+  background: none;
+  border: none;
+  padding: 0.4rem 0;
+  font-family: 'Georgia', serif;
+  font-size: 0.85rem;
+  color: #6a9a88;
+  cursor: pointer;
+  margin-top: 0.25rem;
+}
+
+.addMomentBtn:hover {
+  text-decoration: underline;
 }
 
 /* Column labels */
@@ -160,7 +176,7 @@
 
 .timeLabel {
   flex-shrink: 0;
-  width: 8rem;
+  width: 9rem;
   font-size: 0.78rem;
   color: var(--text-muted);
   letter-spacing: 0.06em;
@@ -355,7 +371,7 @@
   }
 
   .timeInput {
-    width: 7rem;
+    width: 7.5rem;
   }
 
   .columnLabels {

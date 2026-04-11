@@ -4,7 +4,12 @@ import styles from './Timeline.module.css'
 
 let _id = 1
 function makeEvent() {
-  return { id: _id++, date: '', time: '', description: '' }
+  return { id: _id++, time: '', description: '' }
+}
+
+let _dayId = 1
+function makeDay() {
+  return { id: _dayId++, date: '', events: [makeEvent(), makeEvent(), makeEvent()] }
 }
 
 // ─────────────────────────────────────────────
@@ -109,28 +114,45 @@ export default function Timeline() {
   const [height, setHeight]         = useState('')
   const [birthplace, setBirthplace] = useState('')
   const [provider, setProvider]     = useState('')
-  const [theme, setTheme]           = useState('girl')
-  const [events, setEvents]         = useState([makeEvent(), makeEvent(), makeEvent()])
-  const [sameDay, setSameDay]       = useState(true)
-  const [sharedDate, setSharedDate] = useState('')
+  const [theme, setTheme] = useState('girl')
+  const [days, setDays]   = useState([makeDay()])
 
-  function addEvent() {
-    setEvents(prev => [...prev, makeEvent()])
+  function addDay() {
+    setDays(prev => [...prev, makeDay()])
   }
 
-  function removeEvent(id) {
-    setEvents(prev => prev.length > 1 ? prev.filter(e => e.id !== id) : prev)
+  function removeDay(dayId) {
+    setDays(prev => prev.length > 1 ? prev.filter(d => d.id !== dayId) : prev)
   }
 
-  function updateEvent(id, field, value) {
-    setEvents(prev => prev.map(e => e.id === id ? { ...e, [field]: value } : e))
+  function updateDayDate(dayId, date) {
+    setDays(prev => prev.map(d => d.id === dayId ? { ...d, date } : d))
+  }
+
+  function addEventToDay(dayId) {
+    setDays(prev => prev.map(d => d.id === dayId ? { ...d, events: [...d.events, makeEvent()] } : d))
+  }
+
+  function removeEventFromDay(dayId, eventId) {
+    setDays(prev => prev.map(d => {
+      if (d.id !== dayId) return d
+      return d.events.length > 1 ? { ...d, events: d.events.filter(e => e.id !== eventId) } : d
+    }))
+  }
+
+  function updateEvent(dayId, eventId, field, value) {
+    setDays(prev => prev.map(d => {
+      if (d.id !== dayId) return d
+      return { ...d, events: d.events.map(e => e.id === eventId ? { ...e, [field]: value } : e) }
+    }))
   }
 
   function handlePreviewPDF() {
-    const filled = events
-      .map(e => sameDay ? { ...e, date: sharedDate } : e)
-      .filter(e => e.date || e.time || e.description.trim())
-      .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
+    const filled = days.flatMap(day =>
+      day.events
+        .filter(e => e.time || e.description.trim())
+        .map(e => ({ ...e, date: day.date }))
+    ).sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
 
     const win = window.open('', '_blank', 'width=920,height=960')
     if (!win) {
@@ -249,74 +271,78 @@ export default function Timeline() {
 
       {/* ── Timeline Events ── */}
       <section className={styles.section}>
-        <div className={styles.sectionTitleRow}>
-          <h2 className={styles.sectionTitle}>Timeline Events</h2>
-          <label className={styles.sameDayLabel}>
-            <input
-              type="checkbox"
-              className={styles.sameDayCheck}
-              checked={sameDay}
-              onChange={e => setSameDay(e.target.checked)}
-            />
-            Same day
-          </label>
-        </div>
-        {sameDay && (
-          <div className={styles.sharedDateRow}>
-            <span className={styles.sharedDateText}>Date for all events:</span>
-            <input
-              type="date"
-              className={styles.dateInput}
-              value={sharedDate}
-              onChange={e => setSharedDate(e.target.value)}
-            />
-          </div>
-        )}
-        <div className={styles.columnLabels}>
-          {!sameDay && <span className={styles.dateLabel}>Date</span>}
-          <span className={styles.timeLabel}>Time</span>
-          <span className={styles.descLabel}>Moment</span>
-        </div>
-        <div className={styles.events}>
-          {events.map(event => (
-            <div key={event.id} className={styles.eventRow}>
-              {!sameDay && (
+        <h2 className={styles.sectionTitle}>Timeline Events</h2>
+
+        {days.map((day, dayIdx) => (
+          <div key={day.id} className={styles.dayGroup}>
+            <div className={styles.dayHeader}>
+              <div className={styles.dayHeaderLeft}>
+                <span className={styles.dayLabel}>Day {dayIdx + 1}</span>
                 <input
                   type="date"
                   className={styles.dateInput}
-                  value={event.date}
-                  onChange={e => updateEvent(event.id, 'date', e.target.value)}
+                  value={day.date}
+                  onChange={e => updateDayDate(day.id, e.target.value)}
                 />
+              </div>
+              {days.length > 1 && (
+                <button
+                  type="button"
+                  className={styles.removeDayBtn}
+                  onClick={() => removeDay(day.id)}
+                >
+                  Remove day
+                </button>
               )}
-              <input
-                type="time"
-                className={styles.timeInput}
-                value={event.time}
-                onChange={e => updateEvent(event.id, 'time', e.target.value)}
-              />
-              <input
-                type="text"
-                className={styles.descInput}
-                value={event.description}
-                onChange={e => updateEvent(event.id, 'description', e.target.value)}
-                placeholder="What happened at this moment..."
-              />
-              <button
-                type="button"
-                className={styles.removeBtn}
-                onClick={() => removeEvent(event.id)}
-                aria-label="Remove this moment"
-              >
-                ×
-              </button>
             </div>
-          ))}
-        </div>
+
+            <div className={styles.columnLabels}>
+              <span className={styles.timeLabel}>Time</span>
+              <span className={styles.descLabel}>Moment</span>
+            </div>
+
+            <div className={styles.events}>
+              {day.events.map(event => (
+                <div key={event.id} className={styles.eventRow}>
+                  <input
+                    type="time"
+                    className={styles.timeInput}
+                    value={event.time}
+                    onChange={e => updateEvent(day.id, event.id, 'time', e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    className={styles.descInput}
+                    value={event.description}
+                    onChange={e => updateEvent(day.id, event.id, 'description', e.target.value)}
+                    placeholder="What happened at this moment..."
+                  />
+                  <button
+                    type="button"
+                    className={styles.removeBtn}
+                    onClick={() => removeEventFromDay(day.id, event.id)}
+                    aria-label="Remove this moment"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              className={styles.addMomentBtn}
+              onClick={() => addEventToDay(day.id)}
+            >
+              + Add moment
+            </button>
+          </div>
+        ))}
       </section>
 
       <div className={styles.actions}>
-        <button type="button" className={styles.addBtn} onClick={addEvent}>
-          + Add moment
+        <button type="button" className={styles.addBtn} onClick={addDay}>
+          + Add another day
         </button>
         <button type="button" className={styles.generateBtn} onClick={handlePreviewPDF}>
           Preview &amp; Edit PDF
