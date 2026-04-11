@@ -4,7 +4,7 @@ import styles from './Timeline.module.css'
 
 let _id = 1
 function makeEvent() {
-  return { id: _id++, time: '', description: '' }
+  return { id: _id++, date: '', time: '', description: '' }
 }
 
 // ─────────────────────────────────────────────
@@ -126,8 +126,8 @@ export default function Timeline() {
 
   function handlePreviewPDF() {
     const filled = events
-      .filter(e => e.time || e.description.trim())
-      .sort((a, b) => a.time.localeCompare(b.time))
+      .filter(e => e.date || e.time || e.description.trim())
+      .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time))
 
     const win = window.open('', '_blank', 'width=920,height=960')
     if (!win) {
@@ -248,12 +248,19 @@ export default function Timeline() {
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>Timeline Events</h2>
         <div className={styles.columnLabels}>
+          <span className={styles.dateLabel}>Date</span>
           <span className={styles.timeLabel}>Time</span>
           <span className={styles.descLabel}>Moment</span>
         </div>
         <div className={styles.events}>
           {events.map(event => (
             <div key={event.id} className={styles.eventRow}>
+              <input
+                type="date"
+                className={styles.dateInput}
+                value={event.date}
+                onChange={e => updateEvent(event.id, 'date', e.target.value)}
+              />
               <input
                 type="time"
                 className={styles.timeInput}
@@ -319,6 +326,13 @@ function fmtDate(dateStr) {
   })
 }
 
+function fmtShortDate(dateStr) {
+  if (!dateStr) return ''
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric',
+  })
+}
+
 // ─────────────────────────────────────────────
 // SVG flowers (theme-aware)
 // ─────────────────────────────────────────────
@@ -377,11 +391,17 @@ function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weigh
     const l   = left[i]
     const r   = right[i]
     const cls = i % 2 === 0 ? 'rp' : 'rs'
+    const fmtCell = e => {
+      if (!e) return ''
+      const dateStr = e.date ? `<div class="tc-date">${esc(fmtShortDate(e.date))}</div>` : ''
+      const timeStr = fmt12(e.time) || '—'
+      return `${dateStr}<span contenteditable="true">${esc(timeStr)}</span>`
+    }
     return `
       <tr class="${cls}">
-        <td class="tc"><span contenteditable="true">${l ? esc(fmt12(l.time) || '—') : ''}</span></td>
+        <td class="tc">${l ? fmtCell(l) : ''}</td>
         <td class="ec"><span contenteditable="true">${l ? esc(l.description) : ''}</span></td>
-        <td class="tc"><span contenteditable="true">${r ? esc(fmt12(r.time) || '—') : ''}</span></td>
+        <td class="tc">${r ? fmtCell(r) : ''}</td>
         <td class="ec"><span contenteditable="true">${r ? esc(r.description) : ''}</span></td>
       </tr>`
   }).join('')
@@ -548,6 +568,7 @@ function buildPrintHTML(events, { babyName, parents, birthDate, birthTime, weigh
     .rp td { background: ${t.rowA}; }
     .rs td { background: ${t.rowB}; }
     .tc { color: ${t.tcColor}; font-weight: bold; width: 12%; }
+    .tc-date { font-size: 6.5pt; font-weight: normal; opacity: 0.75; margin-bottom: 1pt; }
     .ec { width: 38%; }
 
     @media print {
